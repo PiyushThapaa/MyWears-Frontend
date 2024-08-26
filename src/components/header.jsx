@@ -59,6 +59,7 @@ const Header = () => {
                     withCredentials:true
                   })
                   setUser(false)
+                  setAdmin(false)
                   toast.success(data.message)
                   Navigate('/')
                 } catch (err) {

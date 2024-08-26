@@ -20,6 +20,7 @@ const ProductDetails = () => {
     const [remainDiscount, setRemainDiscount] = useState(false)
     const [couponMessageColor, setCouponMessageColor] = useState('');
     const [count, setCount] = useState(1);
+    const [disabled, setDisabled] = useState(false);
     const [maxStock, setMaxStock] = useState(1);
     const [productObj, setProductObj] = useState({})
     const [price, setPrice] = useState(productObj.price);
@@ -33,13 +34,12 @@ const ProductDetails = () => {
         axios.get(`${server}/users/me`,{
             withCredentials:true
         }).then(res=>{
-            console.log(res)
-            // let path = res.data.user
-            // setStreetAddress(path.streetAddress)
-            // setState(path.state)
-            // setCity(path.city)
-            // setZipcode(path.zipcode)
-            // setShowModal(true)
+            let path = res.data.user
+            setStreetAddress(path.streetAddress)
+            setState(path.state)
+            setCity(path.city)
+            setZipcode(path.zipcode)
+            setShowModal(true)
         }).catch(err=>{
             toast.error(err.response.data.message)
             console.log(err)
@@ -134,6 +134,7 @@ const ProductDetails = () => {
     }, [])
 
     function orderHandler() {
+        setDisabled(true)
         axios.post(`${server}/orders/new`, {
             photo: imgPath,
             name:productObj.name,
@@ -284,6 +285,7 @@ const ProductDetails = () => {
                   <button
                     className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
+                    disabled={disabled}
                     onClick={orderHandler}
                   >
                     Order

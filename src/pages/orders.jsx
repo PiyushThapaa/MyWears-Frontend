@@ -1,84 +1,86 @@
-import React from 'react'
-import {useTable,useSortBy} from 'react-table'
-
-
-const data=[{
-  id:"gev45234532ffdgdf",
-  quantity:2,
-  discount:<span className='text-red-500'>200</span>,
-  amount:3800,
-  status:<span className='text-green-500'>processing</span>
-},{
-  id:"gegerherfh234532ffdgdf",
-  quantity:1,
-  discount:400,
-  amount:1800,
-  status:'processing'
-},{
-  id:"gev45234532ffdgdf",
-  quantity:2,
-  discount:100,
-  amount:1900,
-  status:'shipped'
-}]
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useTable, useSortBy } from 'react-table'
+import { server } from '../App'
 
 const columns = [{
-  Headers:"Id",
-  accessor:"id"
-},{
-  Headers:"Quantity",
-  accessor:"quantity"
-},{
-  Headers:"Discount",
-  accessor:"discount"
-},{
-  Headers:"Amount",
-  accessor:"amount"
-},{
-  Headers:"Status",
-  accessor:"status"
+  Headers: "Id",
+  accessor: "id"
+}, {
+  Headers: "Product Name",
+  accessor: "productName"
+}, {
+  Headers: "Status",
+  accessor: "status"
+}, {
+  Headers: "Details",
+  accessor: "details"
 }]
 
 const Orders = () => {
-  const {getTableProps,getTableBodyProps,headerGroups,rows,prepareRow} = useTable({
+
+  const [data,setData] = useState([])
+
+  useEffect(() => {
+    axios.get(`${server}/orders/my`, {
+      withCredentials: true
+    }).then(res => {
+      let response = []
+      res.data.orders.map(order => {
+        response.push({
+          id: order._id,
+          productName: order.name,
+          status: <span className='text-green-500'>{order.status}</span>,
+          details: <button className='text-blue-500'>Details</button>
+        })
+      })
+      setData(response)
+    }).catch(err=>{
+      toast.error(err.response.data.message)
+      console.log(err)
+    })
+  }, [])
+
+
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data
-  },useSortBy)
-  
-  return (
-  
-    <div className='flex flex-col items-center'>
-    <h1 className='text-4xl font-thin m-7'>My Orders</h1>
-      <table {...getTableProps()} className=' border-collapse'>
-      <thead>
-        {headerGroups.map(hg=>(
-          <tr {...hg.getHeaderGroupProps()}>
-            {hg.headers.map(header=>(
-              <th {...header.getHeaderProps(header.getSortByToggleProps())} className=' p-3'>
-                {header.render("Headers")}
-              </th>
-        ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-{
-  rows.map(row=>{
-    prepareRow(row)
-    return <tr {...row.getRowProps()} >
+  }, useSortBy)
 
-      {
-        row.cells.map(cell=>(
-          <td {...cell.getCellProps()} className='p-5 border-b-2 self-center text-center'>
-            {cell.render("Cell")}
-          </td>
-        ))
-      }
-    </tr>
-  })
-}
-      </tbody>
-    </table>
+  return (
+
+    <div className='flex flex-col items-center'>
+      <h1 className='text-4xl font-thin m-7'>My Orders</h1>
+      <table {...getTableProps()} className=' border-collapse'>
+        <thead>
+          {headerGroups.map(hg => (
+            <tr {...hg.getHeaderGroupProps()}>
+              {hg.headers.map(header => (
+                <th {...header.getHeaderProps(header.getSortByToggleProps())} className=' p-3'>
+                  {header.render("Headers")}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {
+            rows.map(row => {
+              prepareRow(row)
+              return <tr {...row.getRowProps()} >
+
+                {
+                  row.cells.map(cell => (
+                    <td {...cell.getCellProps()} className='p-5 border-b-2 self-center text-center'>
+                      {cell.render("Cell")}
+                    </td>
+                  ))
+                }
+              </tr>
+            })
+          }
+        </tbody>
+      </table>
     </div>
   )
 }
