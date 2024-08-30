@@ -8,14 +8,17 @@ export const cartContext = createContext()
 
 const cart = () => {
 
-  const [display,setDisplay] = useState(false)
-  const [remainPrice,setRemainPrice] = useState(false)
   const [price, setPrice] = useState(0);
   const [coupon, setCoupon] = useState('');
+  const [display, setDisplay] = useState(false)
   const [discount, setDiscount] = useState(0);
+  const [showModal, setShowModal] = useState(false)
+  const [remainPrice, setRemainPrice] = useState(false)
   const [couponMessage, setCouponMessage] = useState('');
-  const [remainDiscount,setRemainDiscount] = useState(false)
+  const [remainDiscount, setRemainDiscount] = useState(false)
+  const [discountPercent, setDiscountPercent] = useState(0);
   const [couponMessageColor, setCouponMessageColor] = useState('');
+  
   const [cartState, setCartState] = useState(localStorage.getItem("cart") !== null ?
     JSON.parse(localStorage.getItem("cart")) : null)
   const [cartUpdate, setCartUpdate] = useState(false)
@@ -23,16 +26,44 @@ const cart = () => {
   const [priceArr, setPriceArr] = useState(localStorage.getItem("cart") !== null ?
     JSON.parse(localStorage.getItem("cart")).filter(obj => obj.price) : [])
 
-    useEffect(()=>{
-      let price = []
-      localStorage.getItem("cart") !== null ?
+  const [streetAddress, setStreetAddress] = useState('')
+  const [state, setState] = useState('')
+  const [city, setCity] = useState('')
+  const [zipcode, setZipcode] = useState(0)
+
+  function cartOrderConfirm() {
+    axios.get(`${server}/users/me`, {
+      withCredentials: true
+    }).then(res => {
+      let path = res.data.user
+      setStreetAddress(path.streetAddress)
+      setState(path.state)
+      setCity(path.city)
+      setZipcode(path.zipcode)
+      setShowModal(true)
+    }).catch(err => {
+      toast.error(err.response.data.message)
+      console.log(err)
+      setShowModal(false)
+    })
+  }
+
+  function cartOrderHandler (){
+    JSON.parse(localStorage.getItem("cart")).forEach(element => {
+      console.log(element)
+    });
+  }
+
+  useEffect(() => {
+    let price = []
+    localStorage.getItem("cart") !== null ?
       JSON.parse(localStorage.getItem("cart")).filter(obj => price.push(obj.price)) : null
-      setRemainPrice(!remainPrice)
-      setCheck(localStorage.getItem("cart") !== null)
-      setCartState(localStorage.getItem("cart") !== null ?
+    setRemainPrice(!remainPrice)
+    setCheck(localStorage.getItem("cart") !== null)
+    setCartState(localStorage.getItem("cart") !== null ?
       JSON.parse(localStorage.getItem("cart")) : null)
-      setPriceArr(price)
-    },[cartUpdate])
+    setPriceArr(price)
+  }, [cartUpdate])
 
   useEffect(() => {
     const cart = localStorage.getItem("cart");
@@ -45,33 +76,34 @@ const cart = () => {
     setRemainDiscount(!remainDiscount)
   }, [priceArr]);
 
-  useEffect(()=>{
+  useEffect(() => {
     couponHandler()
-  },[remainDiscount])
+  }, [remainDiscount])
 
-  async function couponHandler (){
+  async function couponHandler() {
     try {
-      const {data} = await axios.post(`${server}/coupons/verify`,{
+      const { data } = await axios.post(`${server}/coupons/verify`, {
         coupon
       },
-    {
-      headers:{
-        "Content-Type":"application/json"
-      },
-      withCredentials:true
-    })
-    setCouponMessageColor('green')
-    setCouponMessage(`Valid Coupon : ${data.discount}% OFF`)
-    setDiscount((price*data.discount)/100)
+        {
+          headers: {
+            "Content-Type": "application/json"
+          },
+          withCredentials: true
+        })
+      setCouponMessageColor('green')
+      setCouponMessage(`Valid Coupon : ${data.discount}% OFF`)
+      setDiscount((price * data.discount) / 100)
+      setDiscountPercent(data.discount)
     } catch (err) {
       setDiscount(0)
       setCouponMessageColor('red')
       setCouponMessage(err.response.data.message)
     }
   }
-  
+
   return (
-    <cartContext.Provider value={{ cartUpdate, setCartUpdate, setPriceArr, priceArr,remainPrice }}>
+    <cartContext.Provider value={{ cartUpdate, setCartUpdate, setPriceArr, priceArr, remainPrice }}>
       <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
         <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Shopping Cart</h2>
@@ -114,7 +146,7 @@ const cart = () => {
                   </dl>
                 </div>
 
-                <button href="#" className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 bg-blue-700 text-white">Proceed to Checkout</button>
+                <button onClick={cartOrderConfirm} className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 bg-blue-700 text-white">Proceed to Checkout</button>
 
               </div>
 
@@ -122,10 +154,10 @@ const cart = () => {
                 <div className="space-y-4">
                   <div>
                     <label htmlFor="voucher" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Coupon Code </label>
-                    <input type="text" id="voucher" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" placeholder="" onChange={e=>setCoupon(e.target.value.toUpperCase())} value={coupon} required />
+                    <input type="text" id="voucher" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" placeholder="" onChange={e => setCoupon(e.target.value.toUpperCase())} value={coupon} required />
                   </div>
-                  {<p style={{color:couponMessageColor,display:display?"block":"none"}}>{couponMessage}</p>}
-                  <button type="submit" className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 bg-blue-700 dark:hover:bg-primary-700 dark:focus:ring-primary-800" onClick={()=>{
+                  {<p style={{ color: couponMessageColor, display: display ? "block" : "none" }}>{couponMessage}</p>}
+                  <button type="submit" className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 bg-blue-700 dark:hover:bg-primary-700 dark:focus:ring-primary-800" onClick={() => {
                     setRemainDiscount(!remainDiscount)
                     setDisplay(true)
                   }}>Apply Code</button>
@@ -134,6 +166,67 @@ const cart = () => {
             </div>
           </div>
         </div>
+        {showModal ? (
+          <>
+            <div
+              className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+            >
+              <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                {/*content*/}
+                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                  {/*header*/}
+                  <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                    <h3 className="text-3xl font-semibold">
+                      Order Details
+                    </h3>
+                    <button
+                      className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                      onClick={() => setShowModal(false)}
+                    >
+                      <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                        ×
+                      </span>
+                    </button>
+                  </div>
+                  <div className="relative p-6 flex-auto">
+                    <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
+                      <b>Number of Products: </b> {JSON.parse(localStorage.getItem("cart")).length}
+                      <br />
+                      <b>Discount on each product: </b> {discountPercent}%
+                      <br />
+                      <b>Total Amount: </b> ₹{price}
+                      <br />
+                      <b>Mode of Payment: </b> Offline
+                      <br />
+                      <b>Shipping Address: </b> {streetAddress}, {state}, {city} - {zipcode}, India
+                      <br /><br />
+                      <p className='text-red-600'>*If you want your product to be delivered on some other address then please first update your address then place any order*</p>
+                    </p>
+                  </div>
+                  {/*footer*/}
+                  <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                    <button
+                      className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      type="button"
+                      onClick={() => setShowModal(false)}
+                    >
+                      Close
+                    </button>
+                    <button
+                      className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      type="button"
+                    // disabled={disabled}
+                    onClick={cartOrderHandler}
+                    >
+                      Order Cart Items
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+          </>
+        ) : null}
       </section>
     </cartContext.Provider>
   )

@@ -1,8 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { server } from '../../../App';
+import { useNavigate } from 'react-router-dom';
 
 const order = () => {
+
+  const Navigate = useNavigate()
 
   const [orders, setOrders] = useState([])
   const [email, setEmail] = useState({})
@@ -36,10 +39,6 @@ const order = () => {
   )
   }, [orders])
 
-  // useEffect(()=>{
-  //   console.log(email)
-  // },[email])
-
   return (
     <div className="container mx-auto p-7">
       <h1 className="text-2xl mb-4">Customer Orders</h1>
@@ -72,12 +71,12 @@ const order = () => {
                     </span>
                   </td>
                   <td className="py-2 px-4 border-b">
-                    <a
-                      href={`/admin-dashboard/order/${order._id}`}
+                    <button
+                      onClick={()=>Navigate(`/admin-dashboard/order-details/${order._id}`)}
                       className="text-blue-500 hover:underline"
                     >
                       View Details
-                    </a>
+                    </button>
                   </td>
                 </tr>
               )

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState, createContext, useContext } from 'react'
+import React, { lazy, Suspense, useEffect, useState, createContext } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import Loader from './components/loader'
@@ -13,6 +13,7 @@ const Login = lazy(() => import('./pages/login'));
 const Register = lazy(() => import('./pages/register'));
 const AdminDashboard = lazy(() => import('./pages/admin/dashboard'));
 const OrderDetails = lazy(() => import('./pages/admin/components/orderDetails'));
+const UserOrderDetails = lazy(() => import('./pages/orderDetails'));
 const PageNotFound = lazy(() => import('./pages/pageNotFound'));
 
 export const server = "http://localhost:3000/api/v1"
@@ -70,8 +71,9 @@ const Main = () => {
         <Route path="/search" element={<Search />} />
         <Route path="/cart" element={<Cart />} />
         {userRoute && <Route path="/orders" element={<Orders />} />}
+        {userRoute && <Route path="/order/:id" element={<UserOrderDetails />} />}
         {adminRoute && <Route path="/admin-dashboard" element={<AdminDashboard />} />}
-        {adminRoute && <Route path="/admin-dashboard/order/:id" element={<OrderDetails />} />}
+        {adminRoute && <Route path="/admin-dashboard/order-details/:id" element={<OrderDetails />} />}
         <Route path='*' element={<PageNotFound />} />
         <Route path="/productdetails/:id" element={<ProductDetails />} />
       </Routes>

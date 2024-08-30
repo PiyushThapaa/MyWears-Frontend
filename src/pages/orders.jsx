@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useTable, useSortBy } from 'react-table'
 import { server } from '../App'
+import { useNavigate } from 'react-router-dom'
 
 const columns = [{
   Headers: "Id",
@@ -19,6 +20,8 @@ const columns = [{
 
 const Orders = () => {
 
+  const Navigate = useNavigate()
+
   const [data,setData] = useState([])
 
   useEffect(() => {
@@ -30,8 +33,13 @@ const Orders = () => {
         response.push({
           id: order._id,
           productName: order.name,
-          status: <span className='text-green-500'>{order.status}</span>,
-          details: <button className='text-blue-500'>Details</button>
+          status: <span className={`${order.status === 'Delivered'
+            ? 'text-green-500'
+            : order.status === 'Shipped'
+              ? 'text-yellow-500'
+              : 'text-red-500'
+            }`}>{order.status}</span>,
+          details: <button className='text-blue-500' onClick={()=>Navigate(`/order/${order._id}`)}>Details</button>
         })
       })
       setData(response)
