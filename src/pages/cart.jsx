@@ -96,6 +96,7 @@ const cart = () => {
       setDiscount((price * data.discount) / 100)
       setDiscountPercent(data.discount)
     } catch (err) {
+      setDiscountPercent(0)
       setDiscount(0)
       setCouponMessageColor('red')
       setCouponMessage(err.response.data.message)
@@ -192,7 +193,7 @@ const cart = () => {
                     <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
                       <b>Number of Products: </b> {JSON.parse(localStorage.getItem("cart")).length}
                       <br />
-                      <b>Discount on each product: </b> {discountPercent}%
+                      <b>Discount on each product: </b> {discountPercent}{discountPercent!==0?"%":null}
                       <br />
                       <b>Total Amount: </b> ₹{price}
                       <br />

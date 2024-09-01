@@ -15,11 +15,33 @@ const ProductCard = ({ image, itemName, price, productId }) => {
       withCredentials: true
     }).then(res => {
       if (localStorage.getItem("cart") == null) {
-        arr.push(res.data.singleProduct)
+        const path = res.data.singleProduct
+        const size = Object.keys(JSON.parse(path.stock))[0]
+        const quantity = JSON.parse(path.stock)[size]
+        let obj = {
+          _id:path._id,
+          name:path.name,
+          photo:path.photo,
+          price:path.price,
+          size:size,
+          quantity:quantity
+        }
+        arr.push(obj)
         localStorage.setItem("cart", JSON.stringify(arr))
       } else {
         arr = JSON.parse(localStorage.getItem("cart"))
-        arr.push(res.data.singleProduct)
+        const path = res.data.singleProduct
+        const size = Object.keys(JSON.parse(path.stock))[0]
+        const quantity = JSON.parse(path.stock)[size]
+        let obj = {
+          _id:path._id,
+          name:path.name,
+          photo:path.photo,
+          price:path.price,
+          size:size,
+          quantity:quantity
+        }
+        arr.push(obj)
         localStorage.setItem("cart", JSON.stringify(arr))
       }
       setUpdateIcon(JSON.parse(localStorage.getItem("cart")).some(obj => obj._id == productId))

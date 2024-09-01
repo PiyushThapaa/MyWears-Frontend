@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { cartContext } from '../pages/cart';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { server } from '../App';
 
 
 const CartItem = ({ image, productName, price, cartId, index }) => {
@@ -12,10 +14,16 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
   const [maxStock, setMaxStock] = useState(0)
   const item = localStorage.getItem("cart") != null ?
     JSON.parse(localStorage.getItem("cart")).find(obj => obj._id == cartId) : null
-  const sizeArr = item ? Object.keys(JSON.parse(item.stock)) : []
+  const [sizeArr,setSizeArr] = useState([])
 
   useEffect(() => {
-    setMaxStock(JSON.parse(item.stock)["XS"])
+    // setMaxStock(JSON.parse(item.stock)["XS"])
+    axios.get(`${server}/products/${cartId}`,{
+      withCredentials:true
+    }).then(res=>{
+      const stockArr = Object.keys(JSON.parse(res.data.singleProduct.stock))
+      setSizeArr(stockArr)
+    })
   }, [])
 
   useEffect(() => {
@@ -64,13 +72,13 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
               +
             </button>
           </div>
-          <select className=' ml-7 border rounded-lg' onChange={e => {
+          <select className=' ml-7 border rounded-lg' defaultValue={item.size}  onChange={e => {
             setMaxStock(JSON.parse(item.stock)[e.target.value])
             setCount(1)
           }} >
             {
               sizeArr.map((size, index) => {
-                if (JSON.parse(item.stock)[size] == 0) {
+                if (item.size == 0) {
                   return;
                 }
                 return <option value={size} key={index}>{size}</option>
