@@ -24,7 +24,8 @@ const ProductCard = ({ image, itemName, price, productId }) => {
           photo:path.photo,
           price:path.price,
           size:size,
-          quantity:quantity
+          maxQuantity:quantity,
+          quantity:1
         }
         arr.push(obj)
         localStorage.setItem("cart", JSON.stringify(arr))

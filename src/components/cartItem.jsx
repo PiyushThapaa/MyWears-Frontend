@@ -3,6 +3,7 @@ import { cartContext } from '../pages/cart';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { server } from '../App';
+import toast from 'react-hot-toast';
 
 
 const CartItem = ({ image, productName, price, cartId, index }) => {
@@ -10,39 +11,65 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
   const Navigate = useNavigate()
 
   const { cartUpdate, setCartUpdate, setPriceArr, remainPrice } = useContext(cartContext)
-  const [count, setCount] = useState(1);
-  const [maxStock, setMaxStock] = useState(0)
-  const item = localStorage.getItem("cart") != null ?
-    JSON.parse(localStorage.getItem("cart")).find(obj => obj._id == cartId) : null
   const [sizeArr,setSizeArr] = useState([])
+  const [updateOption,setUpdateOption] = useState(false)
+  const [updateCart,setUpdateCart] = useState(JSON.parse(localStorage.getItem('cart'))[index])
+
+  useEffect(()=>{
+    setUpdateCart(JSON.parse(localStorage.getItem('cart'))[index])
+  },[updateOption])
 
   useEffect(() => {
-    // setMaxStock(JSON.parse(item.stock)["XS"])
     axios.get(`${server}/products/${cartId}`,{
       withCredentials:true
     }).then(res=>{
-      const stockArr = Object.keys(JSON.parse(res.data.singleProduct.stock))
+      const stockArr = Object.entries(JSON.parse(res.data.singleProduct.stock))
+      console.log(stockArr)
       setSizeArr(stockArr)
+    }).catch(err=>{
+      removeCartItem()
+      toast.error(err.response.data.message)
+      console.log(err)
     })
   }, [])
 
   useEffect(() => {
     setPriceArr(prev => {
       let arr = [...prev]
-      arr[index] = count * price
+      arr[index] = JSON.parse(localStorage.getItem('cart'))[index].quantity * price
       return arr
     })
-  }, [count, remainPrice])
+  }, [JSON.parse(localStorage.getItem('cart'))[index].quantity, remainPrice])
 
   const decreaseCount = () => {
-    if (count > 1) {
-      setCount(count - 1);
+    if (JSON.parse(localStorage.getItem('cart'))[index].quantity > 1) {
+      let cart = JSON.parse(localStorage.getItem("cart"))
+            cart = cart.map(item=>{
+              if(item._id == cartId){
+                  return {
+                    ...item,
+                  quantity : JSON.parse(localStorage.getItem('cart'))[index].quantity - 1
+                  }
+              }
+              return item;
+            })
+            localStorage.setItem('cart',JSON.stringify(cart))
     }
   };
 
   const increaseCount = () => {
-    if (count < maxStock) {
-      setCount(count + 1);
+    if (JSON.parse(localStorage.getItem('cart'))[index].quantity  < JSON.parse(localStorage.getItem('cart'))[index].maxQuantity) {
+      let cart = JSON.parse(localStorage.getItem("cart"))
+            cart = cart.map(item=>{
+              if(item._id == cartId){
+                  return {
+                    ...item,
+                  quantity : JSON.parse(localStorage.getItem('cart'))[index].quantity + 1
+                  }
+              }
+              return item;
+            })
+            localStorage.setItem('cart',JSON.stringify(cart))
     }
   };
 
@@ -66,19 +93,32 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
               -
             </button>
             <div className='ml-2 mr-2'>
-              {count}
+              {JSON.parse(localStorage.getItem('cart'))[index].quantity}
             </div>
             <button type="button" id="increment-button" className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700" onClick={increaseCount}>
               +
             </button>
           </div>
-          <select className=' ml-7 border rounded-lg' defaultValue={item.size}  onChange={e => {
-            setMaxStock(JSON.parse(item.stock)[e.target.value])
-            setCount(1)
+          <select className=' ml-7 border rounded-lg' value={updateCart.size}  onChange={e => {
+            setUpdateOption(prev=>!prev)
+            let cart = JSON.parse(localStorage.getItem("cart"))
+            cart = cart.map(item=>{
+              if(item._id == cartId){
+                  return {
+                    ...item,
+                  size : e.target.value,
+                  maxQuantity : sizeArr.find(item=>item[0] == e.target.value)[1],
+                  quantity:1
+                  }
+              }
+              return item;
+            })
+            localStorage.setItem('cart',JSON.stringify(cart))
+            console.log(JSON.parse(localStorage.getItem('cart')))
           }} >
             {
-              sizeArr.map((size, index) => {
-                if (item.size == 0) {
+              sizeArr.map(([size,quantity], index) => {
+                if (quantity == 0) {
                   return;
                 }
                 return <option value={size} key={index}>{size}</option>
@@ -86,7 +126,7 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
             }
           </select>
           <div className="text-end md:order-4 md:w-24">
-            <p className="text-base font-bold text-gray-900 dark:text-white">₹{count * price}</p>
+            <p className="text-base font-bold text-gray-900 dark:text-white">₹{JSON.parse(localStorage.getItem('cart'))[index].quantity * price}</p>
           </div>
         </div>
 
