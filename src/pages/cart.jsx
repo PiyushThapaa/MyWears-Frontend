@@ -3,10 +3,14 @@ import CartItem from '../components/cartItem'
 import { photoUrl } from './home'
 import axios from 'axios'
 import { server } from '../App'
+import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 export const cartContext = createContext()
 
 const cart = () => {
+
+  const Navigate = useNavigate()
 
   const [price, setPrice] = useState(0);
   const [coupon, setCoupon] = useState('');
@@ -17,7 +21,9 @@ const cart = () => {
   const [couponMessage, setCouponMessage] = useState('');
   const [remainDiscount, setRemainDiscount] = useState(false)
   const [discountPercent, setDiscountPercent] = useState(0);
+  const [orderCompletion, setOrderCompletion] = useState(true);
   const [couponMessageColor, setCouponMessageColor] = useState('');
+  const [displayOrderButton, setDisplayOrderButton] = useState(false);
   
   const [cartState, setCartState] = useState(localStorage.getItem("cart") !== null ?
     JSON.parse(localStorage.getItem("cart")) : null)
@@ -30,6 +36,12 @@ const cart = () => {
   const [state, setState] = useState('')
   const [city, setCity] = useState('')
   const [zipcode, setZipcode] = useState(0)
+
+  useEffect(()=>{
+    if (localStorage.getItem("cart") !== null) {
+      setDisplayOrderButton(true)
+    }
+  },[])
 
   function cartOrderConfirm() {
     axios.get(`${server}/users/me`, {
@@ -48,10 +60,36 @@ const cart = () => {
     })
   }
 
-  function cartOrderHandler (){
-    JSON.parse(localStorage.getItem("cart")).forEach(element => {
-      console.log(element)
+  async function cartOrderHandler (){
+    const cart = JSON.parse(localStorage.getItem("cart"))
+    await cart.forEach(cartItem => {
+      axios.post(`${server}/orders/new`, {
+        photo: cartItem.photo,
+        name:cartItem.name,
+        quantity: cartItem.quantity,
+        size:cartItem.size,
+        discount:cartItem.quantity*((cartItem.price*discountPercent)/100),
+        amount:cartItem.quantity*(cartItem.price-(cartItem.price*discountPercent)/100),
+        status:"Processing",
+        productId:cartItem._id
+    }, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        withCredentials: true
+    })
+        // .then()
+        .catch(err=>{
+          toast.error(err.response.data.message)
+          setOrderCompletion(false)
+          return;
+        })
     });
+    if (orderCompletion) {
+      toast.success("Cart Orders Placed")
+      setTimeout(()=>Navigate('/'),1000)
+      localStorage.clear()
+    }
   }
 
   useEffect(() => {
@@ -104,7 +142,7 @@ const cart = () => {
   }
 
   return (
-    <cartContext.Provider value={{ cartUpdate, setCartUpdate, setPriceArr, priceArr, remainPrice }}>
+    <cartContext.Provider value={{ cartUpdate, setCartUpdate, setPriceArr, priceArr, remainPrice, setDisplayOrderButton }}>
       <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
         <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Shopping Cart</h2>
@@ -147,7 +185,7 @@ const cart = () => {
                   </dl>
                 </div>
 
-                <button onClick={cartOrderConfirm} className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 bg-blue-700 text-white">Proceed to Checkout</button>
+                <button onClick={cartOrderConfirm} className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 bg-blue-700 text-white" style={{display:displayOrderButton?"block":"none"}}>Proceed to Checkout</button>
 
               </div>
 
@@ -195,7 +233,7 @@ const cart = () => {
                       <br />
                       <b>Discount on each product: </b> {discountPercent}{discountPercent!==0?"%":null}
                       <br />
-                      <b>Total Amount: </b> ₹{price}
+                      <b>Total Amount: </b> ₹{price-discount}
                       <br />
                       <b>Mode of Payment: </b> Offline
                       <br />

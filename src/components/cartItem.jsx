@@ -10,10 +10,10 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
 
   const Navigate = useNavigate()
 
-  const { cartUpdate, setCartUpdate, setPriceArr, remainPrice } = useContext(cartContext)
+  const { cartUpdate, setCartUpdate, setPriceArr, remainPrice, setDisplayOrderButton } = useContext(cartContext)
   const [sizeArr,setSizeArr] = useState([])
   const [updateOption,setUpdateOption] = useState(false)
-  const [updateCart,setUpdateCart] = useState(JSON.parse(localStorage.getItem('cart'))[index])
+  const [updateCart,setUpdateCart] = useState({})
 
   useEffect(()=>{
     setUpdateCart(JSON.parse(localStorage.getItem('cart'))[index])
@@ -24,7 +24,6 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
       withCredentials:true
     }).then(res=>{
       const stockArr = Object.entries(JSON.parse(res.data.singleProduct.stock))
-      console.log(stockArr)
       setSizeArr(stockArr)
     }).catch(err=>{
       removeCartItem()
@@ -39,7 +38,7 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
       arr[index] = JSON.parse(localStorage.getItem('cart'))[index].quantity * price
       return arr
     })
-  }, [JSON.parse(localStorage.getItem('cart'))[index].quantity, remainPrice])
+  }, [updateCart.quantity, remainPrice])
 
   const decreaseCount = () => {
     if (JSON.parse(localStorage.getItem('cart'))[index].quantity > 1) {
@@ -55,6 +54,7 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
             })
             localStorage.setItem('cart',JSON.stringify(cart))
     }
+    setUpdateOption(prev=>!prev)
   };
 
   const increaseCount = () => {
@@ -71,12 +71,14 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
             })
             localStorage.setItem('cart',JSON.stringify(cart))
     }
+    setUpdateOption(prev=>!prev)
   };
 
   const removeCartItem = () => {
     let itemArray = JSON.parse(localStorage.getItem("cart")).filter(obj => obj._id !== cartId)
     if (itemArray.length == 0) {
       localStorage.clear()
+      setDisplayOrderButton(false)
     } else {
       localStorage.setItem("cart", JSON.stringify(itemArray))
     }
@@ -93,7 +95,7 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
               -
             </button>
             <div className='ml-2 mr-2'>
-              {JSON.parse(localStorage.getItem('cart'))[index].quantity}
+              {updateCart.quantity}
             </div>
             <button type="button" id="increment-button" className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700" onClick={increaseCount}>
               +
@@ -114,7 +116,6 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
               return item;
             })
             localStorage.setItem('cart',JSON.stringify(cart))
-            console.log(JSON.parse(localStorage.getItem('cart')))
           }} >
             {
               sizeArr.map(([size,quantity], index) => {
@@ -126,7 +127,7 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
             }
           </select>
           <div className="text-end md:order-4 md:w-24">
-            <p className="text-base font-bold text-gray-900 dark:text-white">₹{JSON.parse(localStorage.getItem('cart'))[index].quantity * price}</p>
+            <p className="text-base font-bold text-gray-900 dark:text-white">₹{updateCart.quantity * price}</p>
           </div>
         </div>
 
