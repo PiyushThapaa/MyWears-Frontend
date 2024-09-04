@@ -4,9 +4,10 @@ import { server } from '../../../App'
 import { photoUrl } from '../../home'
 import toast from 'react-hot-toast'
 import { MdDelete } from 'react-icons/md'
-import { confirmAlert } from 'react-confirm-alert'
+import { useNavigate } from 'react-router-dom'
 
 const product = () => {
+
   const [product, setProduct] = useState(true)
   const [all, setAll] = useState('bg-gray-700 text-white')
   const [add, setAdd] = useState('bg-white text-black')
@@ -38,6 +39,8 @@ const product = () => {
 
 const AddProducts = () => {
 
+  const Navigate = useNavigate()
+
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -62,10 +65,25 @@ const AddProducts = () => {
       alert("Product should have atleast one stock...")
       return;
     }
+    if (Object.values(JSON.parse(formData.stock)).find(value => value < 0)) {
+      alert("Oops... Negative Stock...?");
+      return;
+    }
+    if (formData.price < 0 ){
+      alert("Price can't be negetive")
+      return;
+    }
+
     axios.postForm(`${server}/products/new`, formData, {
       withCredentials: true
-    }).then(res => toast.success(res.data.message))
-      .catch(err => console.log(err.response.data.message))
+    }).then(res => {
+      toast.success(res.data.message)
+    window.location.reload()
+    })
+      .catch(err => {
+        console.log(err)
+        toast.error(err.response.data.message)
+      })
   };
 
   return (
@@ -138,7 +156,7 @@ const AddProducts = () => {
       <button
         type="submit"
         className="w-full bg-indigo-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
+       >
         Submit
       </button>
     </form>

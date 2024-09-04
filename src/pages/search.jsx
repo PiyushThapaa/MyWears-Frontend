@@ -6,21 +6,22 @@ import PageIcon from '../components/pageIcon'
 import { photoUrl } from './home'
 
 const search = () => {
-  const [range, setRange] = useState(10000)
+  const [range, setRange] = useState(100000)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
   const [sort, setSort] = useState('')
   const [products, setProducts] = useState([])
   const [pageArray, setPageArray] = useState([])
+  const [page, setPage] = useState(1)
   const [categoriesArr,setCategoriesArr] = useState([])
 
   useEffect(() => {
     filteringFunction()
     allCategory()
-  }, [search,range,category,sort])
+  }, [search,range,category,sort,page])
 
   const filteringFunction = async () => {
-    const filteredProducts = await axios.get(`${server}/products/all?search=${search}&price=${range}&category=${category}&sort=${sort}`)
+    const filteredProducts = await axios.get(`${server}/products/all?search=${search}&price=${range}&category=${category}&sort=${sort}&page=${page}`)
     setProducts(filteredProducts.data.products)
     let pages = []
     for (let i = 1; i <= filteredProducts.data.totalPage; i++) {
@@ -49,7 +50,7 @@ const search = () => {
           <option value="dsc">Price(High to Low)</option>
         </select>
         <b className=' text-2xl'>Max Price:₹{range}</b>
-        <input type="range" name="range" id="range" value={range} max={10000} onChange={(e) => {
+        <input type="range" name="range" id="range" value={range} max={100000} onChange={(e) => {
           setRange(e.target.value)
         }} />
         <b className=' text-2xl'>Category</b>
@@ -87,7 +88,7 @@ const search = () => {
         <div className='flex flex-row'>
           {
             pageArray.map((page) => {
-              return <PageIcon page={page} key={page} />
+              return <PageIcon page={page} key={page} onClick={()=>setPage(page)}/>
             })
           }
         </div>

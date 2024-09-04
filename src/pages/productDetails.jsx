@@ -140,7 +140,7 @@ const ProductDetails = () => {
             name:productObj.name,
             quantity: count,
             size,
-            discount,
+            discount:discount*(count*productObj.price),
             amount:price,
             status:"Processing",
             productId
@@ -263,6 +263,8 @@ const ProductDetails = () => {
                     <b>Size: </b> {size}
                     <br />
                     <b>Quantity: </b> {count}
+                    <br />
+                    <b>Discount: </b> ₹{discount*(count*productObj.price)}
                     <br />
                     <b>Total Amount: </b> ₹{price}
                     <br />

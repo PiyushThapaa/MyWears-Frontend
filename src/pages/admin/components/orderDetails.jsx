@@ -67,7 +67,8 @@ const orderDetails = () => {
           />
           <p><strong>Size:</strong> {orderInfo.size}</p>
           <p><strong>Quantity:</strong> {orderInfo.quantity}</p>
-          <p><strong>Price:</strong> ₹{orderInfo.amount}</p>
+          <p><strong>Discount:</strong> ₹{orderInfo.discount}</p>
+          <p><strong>Total Amount:</strong> ₹{orderInfo.amount}</p>
         </div>
 
         <div>

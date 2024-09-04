@@ -75,7 +75,8 @@ const OrderDetails = () => {
           <h3 className="text-lg font-semibold">{orderInfo.name}</h3>
           <p className="text-gray-600">Size: {orderInfo.size}</p>
           <p className="text-gray-600">Quantity: {orderInfo.quantity}</p>
-          <p className="text-gray-600">Price: {orderInfo.amount}</p>
+          <p className="text-gray-600">Discount: ₹{orderInfo.discount}</p>
+          <p className="text-gray-600">Total Amount: ₹{orderInfo.amount}</p>
           <p className="text-gray-600">Mode of Payment: Cash/Offline</p>
         </div>
       </div>

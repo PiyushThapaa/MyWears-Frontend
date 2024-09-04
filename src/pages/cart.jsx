@@ -16,6 +16,7 @@ const cart = () => {
   const [coupon, setCoupon] = useState('');
   const [display, setDisplay] = useState(false)
   const [discount, setDiscount] = useState(0);
+  const [disabled, setDisabled] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [remainPrice, setRemainPrice] = useState(false)
   const [couponMessage, setCouponMessage] = useState('');
@@ -61,6 +62,7 @@ const cart = () => {
   }
 
   async function cartOrderHandler (){
+    setDisabled(true)
     const cart = JSON.parse(localStorage.getItem("cart"))
     await cart.forEach(cartItem => {
       axios.post(`${server}/orders/new`, {
@@ -82,6 +84,7 @@ const cart = () => {
         .catch(err=>{
           toast.error(err.response.data.message)
           setOrderCompletion(false)
+          setDisabled(false)
           return;
         })
     });
@@ -254,7 +257,7 @@ const cart = () => {
                     <button
                       className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="button"
-                    // disabled={disabled}
+                    disabled={disabled}
                     onClick={cartOrderHandler}
                     >
                       Order Cart Items
