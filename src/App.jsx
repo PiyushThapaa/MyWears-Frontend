@@ -10,6 +10,7 @@ const Search = lazy(() => import('./pages/search'));
 const Cart = lazy(() => import('./pages/cart'));
 const Orders = lazy(() => import('./pages/orders'));
 const Login = lazy(() => import('./pages/login'));
+const Profile = lazy(() => import('./pages/profile'));
 const Register = lazy(() => import('./pages/register'));
 const AdminDashboard = lazy(() => import('./pages/admin/dashboard'));
 const OrderDetails = lazy(() => import('./pages/admin/components/orderDetails'));
@@ -71,6 +72,7 @@ const Main = () => {
         <Route path="/search" element={<Search />} />
         <Route path="/cart" element={<Cart />} />
         {userRoute && <Route path="/orders" element={<Orders />} />}
+        {userRoute && <Route path="/profile" element={<Profile />} />}
         {userRoute && <Route path="/order/:id" element={<UserOrderDetails />} />}
         {adminRoute && <Route path="/admin-dashboard" element={<AdminDashboard />} />}
         {adminRoute && <Route path="/admin-dashboard/order-details/:id" element={<OrderDetails />} />}

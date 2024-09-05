@@ -88,6 +88,7 @@ const Header = () => {
           <Link to={"/search"} className="mr-5 hover:text-white">Search</Link>
           <Link to={"/cart"} className="mr-5 hover:text-white">Cart</Link>
           {user && <Link to={"/orders"} className="mr-5 hover:text-white">Orders</Link>}
+          {user && <Link to={"/profile"} className="mr-5 hover:text-white">Profile</Link>}
           {admin && <Link to={"/admin-dashboard"} className="mr-5 hover:text-white">Dashboard</Link>}
         </nav>
         <input type='submit' className="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0 cursor-pointer" onClick={(e) => authHandler(e.target.value)} value={user ? "Logout" : "Login"} />

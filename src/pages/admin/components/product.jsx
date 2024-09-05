@@ -155,7 +155,7 @@ const AddProducts = () => {
 
       <button
         type="submit"
-        className="w-full bg-indigo-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="w-full bg-gray-700 text-white py-2 px-4 border border-transparent rounded-md shadow-sm hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
        >
         Submit
       </button>
