@@ -40,10 +40,10 @@ const order = () => {
   }, [orders])
 
   return (
-    <div className="container mx-auto p-7">
+    <div className="container mx-auto cus1:p-7">
       <h1 className="text-2xl mb-4">Customer Orders</h1>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
+        <table className="min-w-full bg-white border-collapse table-fixed w-full md:w-auto">
           <thead>
             <tr>
               <th className="py-2 px-4 border-b">Order ID</th>
@@ -56,19 +56,15 @@ const order = () => {
             {orders.map((order, index) => {
               return (
                 <tr key={index}>
-                  <td className="py-2 px-4 border-b">{order._id}</td>
-                  <td className="py-2 px-4 border-b">{email[order.user]}</td>
-                  <td className="py-2 px-4 border-b">
-                    <span
-                      className={`${order.status === 'Delivered'
+                  <td className="py-2 px-4 border-b overflow-hidden text-ellipsis whitespace-nowrap w-28">{order._id}</td>
+                  <td className="py-2 px-4 border-b break-words">{email[order.user]}</td>
+                  <td className={`py-2 px-4 border-b text-center ${order.status === 'Delivered'
                         ? 'text-green-500'
                         : order.status === 'Shipped'
                           ? 'text-yellow-500'
                           : 'text-red-500'
-                        }`}
-                    >
+                        }`}>
                       {order.status}
-                    </span>
                   </td>
                   <td className="py-2 px-4 border-b">
                     <button
