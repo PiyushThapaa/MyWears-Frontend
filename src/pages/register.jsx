@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Context, server } from '../App';
 import validator from 'validator';
 import { ClipLoader } from 'react-spinners';
-import toast from 'react-hot-toast';
+import toast, {Toaster} from 'react-hot-toast';
 
 const register = () => {
 
@@ -40,11 +40,15 @@ const register = () => {
           return;
         }
         if(!validator.isEmail(email)){
-          alert("Enter a valid Email")
+          toast.error("Enter a valid Email")
           return;
         }
         if(display){
-          alert("Password is not matching")
+          toast.error("Password is not matching")
+          return;
+        }
+        if(password.length < 10){
+          toast.error("Weak Password (Atleast 10 characters required)")
           return;
         }
         setDisabled(true)
@@ -74,6 +78,7 @@ const register = () => {
 
   return (
     <div className='w-10/12 text-center content-center m-auto mt-32 p-8 rounded-lg bg-gray-200 shadow-2xl overflow-y-scroll'style={{height:"26rem"}}>
+      <Toaster />
         <div className=' flex justify-center h-12'>
           <img src={Logo} alt="logo" width={55} />
         <p className='font-bold font text-4xl mb-8 ml-2'>Register</p>

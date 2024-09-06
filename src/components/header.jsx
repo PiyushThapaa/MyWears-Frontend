@@ -79,6 +79,7 @@ const Header = () => {
 
   return (
     <nav className="w-full text-gray-400 bg-gray-900 shadow">
+      <Toaster />
       <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
         <div>
           <div className="flex items-center justify-between md:py-5 md:block">

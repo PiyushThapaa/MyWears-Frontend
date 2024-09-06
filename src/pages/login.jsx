@@ -23,11 +23,11 @@ const login = () => {
   
   async function loginHandler () {
     if (email==''|| password==''){
-      alert("Please fill all the credentials")
+      toast.error("Please fill all the credentials")
       return;
     }
     if(!validator.isEmail(email)){
-      alert("Enter a valid Email")
+      toast.error("Enter a valid Email")
       return;
     }
     setDisabled(true)
