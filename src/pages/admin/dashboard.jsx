@@ -19,7 +19,7 @@ const dashboard = () => {
   const [sidebarVisibility, setSidebarVisibility] = useState(false)
 
   return (
-    <AdminContext.Provider value={{setProducts,setOrders,setCoupons,setCustomers}}>
+    <AdminContext.Provider value={{setProducts,setOrders,setCoupons,setCustomers,setSidebarVisibility}}>
       <div className='flex duration-1000'>
       <div className={`${sidebarVisibility?"block":"hidden"} absolute cus1:fixed cus1:block`}><SideBar /></div>
       <div className='cus1:ml-60 flex flex-col mt-3'>

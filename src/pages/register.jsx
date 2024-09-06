@@ -65,7 +65,7 @@ const register = () => {
         if(err.message!=="Network Error"){
           toast.error(err.response.data.message)
         } else{
-          toast.error(`${err.message} or Server is down for 30 secs...`)
+          toast.error(err.message)
         }
       } finally{
         setDisabled(false)

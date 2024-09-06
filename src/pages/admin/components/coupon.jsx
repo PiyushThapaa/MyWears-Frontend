@@ -61,12 +61,12 @@ const coupon = () => {
     <div>
       <h1 className='text-4xl mb-2'>Coupons</h1>
       <br />
-      <input type="text" placeholder='Enter Coupon...' className='text-2xl outline-none' value={coupon} onChange={e => setCoupon((e.target.value).toUpperCase())} />
-      <input type="number" value={discount} placeholder='Enter discount in %...' className='text-2xl outline-none' onChange={e => setDiscount(e.target.value)} />
+      <input type="text" placeholder='Enter Coupon...' className='text-2xl outline-none ml-2' value={coupon} onChange={e => setCoupon((e.target.value).toUpperCase())} />
+      <input type="number" value={discount} placeholder='Enter discount in %...' className='text-2xl outline-none ml-2' onChange={e => setDiscount(e.target.value)} />
       <button className='text-white bg-gray-900 p-2 rounded hover:bg-black' onClick={addCouponHandler} disabled={disabled}>Add</button>
       <br />
       <br />
-      <div className='w-2/3 border rounded flex justify-center shadow-lg'>
+      <div className='w-auto border rounded flex justify-center shadow-lg'>
         <table>
           <thead>
             <tr>

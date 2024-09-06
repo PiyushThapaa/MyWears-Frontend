@@ -23,7 +23,7 @@ const customers = () => {
       <h1 className='text-4xl mb-2'>Customers</h1>
       <br />
       <div className='border rounded flex justify-center shadow-lg'>
-        <table>
+        <table className='border-collapse table-fixed w-full md:w-auto'>
           <thead>
             <tr>
               <th className='p-4'>S No</th>
@@ -38,9 +38,9 @@ const customers = () => {
                 return (
                   <tr key={index}>
                     <td className='p-4 text-center'>{index+1}</td>
-                    <td className='p-4 text-center'>{user.name}</td>
-                    <td className='p-4 text-center'>{user.email}</td>
-                    <td className='flex justify-center p-5'>{user.streetAddress}, {user.state} {user.city} - {user.zipcode}, India</td>
+                    <td className='p-4 text-center break-words'>{user.name}</td>
+                    <td className='p-4 text-center break-words'>{user.email}</td>
+                    <td className='flex justify-center p-5 break-words'>{user.streetAddress}, {user.state} {user.city} - {user.zipcode}, India</td>
                   </tr>
                 )
               })

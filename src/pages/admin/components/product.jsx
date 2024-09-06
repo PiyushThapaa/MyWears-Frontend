@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { server } from '../../../App'
 import { photoUrl } from '../../home'
 import toast from 'react-hot-toast'
-import { MdDelete } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 
 const product = () => {
@@ -155,7 +154,7 @@ const AddProducts = () => {
 
       <button
         type="submit"
-        className="w-full bg-gray-700 text-white py-2 px-4 border border-transparent rounded-md shadow-sm hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="w-full bg-gray-700 text-white py-2 px-4 border border-transparent rounded-md shadow-sm hover:bg-black focus:outline-none"
        >
         Submit
       </button>
@@ -164,6 +163,8 @@ const AddProducts = () => {
 }
 
 const AllProducts = () => {
+
+  const Navigate = useNavigate()
 
   const [allProducts, setAllProducts] = useState([])
   const [updateAllProducts,setUpdateAllProducts] = useState(false)
@@ -193,9 +194,56 @@ const AllProducts = () => {
     AllProductsFetch()
   }, [updateAllProducts])
 
+
   return (
-    <div className='border rounded flex justify-center shadow-lg w-full'>
-      <table>
+    <div className=' rounded flex justify-center shadow-lg w-full'>
+      <div className="container flex flex-wrap mx-auto p-4">
+      {allProducts.map((product,index)=>{
+        let imgLoc = String(product.photo).split('\\').pop()
+        let stocks = JSON.parse(product.stock)
+        return(
+          <div key={index} className="bg-white shadow-md rounded-lg p-4 m-4 flex flex-col md:flex-row items-center justify-between">
+      {/* Product Image */}
+      <img
+        src={`${photoUrl}/uploads/${imgLoc}`}
+        alt={product.name}
+        onClick={()=>Navigate(`/productdetails/${product._id}`)}
+        className="w-32 h-32 object-cover rounded-md cursor-pointer"
+      />
+      {/* Product Info */}
+      <div className="flex flex-col items-start ml-4">
+        <h2 className="text-lg font-semibold">{product.name}</h2>
+        <p className="text-gray-500">{product.category}</p>
+        <p className="text-xl font-bold">₹{product.price}</p>
+      </div>
+
+      {/* Stock Dropdown */}
+      <div className="ml-4">
+        <label htmlFor="size" className="text-sm font-medium">
+          Size:
+        </label>
+        <select className='border rounded'>
+                      <option>XS: {stocks.XS}</option>
+                      <option>S: {stocks.S}</option>
+                      <option>M:{stocks.M}</option>
+                      <option>L: {stocks.L}</option>
+                      <option>XL: {stocks.XL}</option>
+                      <option>XXL: {stocks.XXL}</option>
+                    </select>
+      </div>
+
+      {/* Delete Button */}
+      <button
+        onClick={() => deleteProductHandler(product._id)}
+        className="ml-4 bg-gray-700 text-white hover:bg-black font-bold py-2 px-4 rounded"
+      >
+        Delete
+      </button>
+    </div>
+        )
+      })}
+    </div>
+      {/* <table className='hidden cus2:block'>
         <thead>
           <tr>
             <th className='p-4'>Product Id</th>
@@ -235,7 +283,7 @@ const AllProducts = () => {
             })
           }
         </tbody>
-      </table>
+      </table> */}
     </div>
   )
 }

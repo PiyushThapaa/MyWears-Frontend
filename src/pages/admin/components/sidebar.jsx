@@ -16,7 +16,7 @@ import { AdminContext } from '../dashboard';
 
 const sidebar = () => {
 
-  const {setProducts,setOrders,setCoupons,setCustomers} = useContext(AdminContext)
+  const {setProducts,setOrders,setCoupons,setCustomers, setSidebarVisibility} = useContext(AdminContext)
 
   return (
     <div>
@@ -32,6 +32,7 @@ const sidebar = () => {
           setCoupons(false)
           setCustomers(false)
           setProducts(false)
+          setSidebarVisibility(false)
         }}>
           <ListItemPrefix>
             <ClipboardDocumentCheckIcon className="h-5 w-5" />
@@ -43,6 +44,7 @@ const sidebar = () => {
           setCoupons(false)
           setCustomers(false)
           setProducts(true)
+          setSidebarVisibility(false)
         }}>
           <ListItemPrefix>
             <ListBulletIcon className="h-5 w-5" />
@@ -54,6 +56,7 @@ const sidebar = () => {
           setCoupons(false)
           setCustomers(true)
           setProducts(false)
+          setSidebarVisibility(false)
         }}>
           <ListItemPrefix>
             <UserCircleIcon className="h-5 w-5" />
@@ -65,6 +68,7 @@ const sidebar = () => {
           setCoupons(true)
           setCustomers(false)
           setProducts(false)
+          setSidebarVisibility(false)
         }}>
           <ListItemPrefix>
             <TicketIcon className="h-5 w-5" />
