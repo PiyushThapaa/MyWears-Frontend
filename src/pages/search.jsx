@@ -5,6 +5,7 @@ import axios from 'axios'
 import { server } from '../App'
 import PageIcon from '../components/pageIcon'
 import { photoUrl } from './home'
+import SkeletonLoader from '../components/skeletonLoader';
 
 const search = () => {
   const [range, setRange] = useState(100000)
@@ -16,6 +17,8 @@ const search = () => {
   const [page, setPage] = useState(1)
   const [categoriesArr, setCategoriesArr] = useState([])
 
+  const [show, setShow] = useState(false)
+
   const [displayFilter, setDisplayFilter] = useState(false)
 
   useEffect(() => {
@@ -24,13 +27,18 @@ const search = () => {
   }, [search, range, category, sort, page])
 
   const filteringFunction = async () => {
-    const filteredProducts = await axios.get(`${server}/products/all?search=${search}&price=${range}&category=${category}&sort=${sort}&page=${page}`)
-    setProducts(filteredProducts.data.products)
-    let pages = []
-    for (let i = 1; i <= filteredProducts.data.totalPage; i++) {
-      pages.push(i)
+    try {
+      const filteredProducts = await axios.get(`${server}/products/all?search=${search}&price=${range}&category=${category}&sort=${sort}&page=${page}`)
+      setProducts(filteredProducts.data.products)
+      let pages = []
+      for (let i = 1; i <= filteredProducts.data.totalPage; i++) {
+        pages.push(i)
+      }
+      setPageArray(pages)
+      setShow(true)
+    } catch (error) {
+      console.log(error)
     }
-    setPageArray(pages)
   }
 
   const allCategory = async () => {
@@ -81,13 +89,20 @@ const search = () => {
         <br />
         <br />
         <div className='flex flex-wrap'>
-          {
+          {show?
             products.map((product) => {
               let imgLoc = String(product.photo).split('\\').pop()
               return (
                 <ProductCard image={`${photoUrl}/uploads/${imgLoc}`} itemName={product.name} price={product.price} key={product._id} productId={product._id} />
               )
-            })
+            }): <div className='flex flex-wrap'>
+              <SkeletonLoader/>
+              <SkeletonLoader/>
+              <SkeletonLoader/>
+              <SkeletonLoader/>
+              <SkeletonLoader/>
+              <SkeletonLoader/>
+            </div>
           }
         </div>
         <div className='flex flex-row'>
