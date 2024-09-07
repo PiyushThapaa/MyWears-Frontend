@@ -1,10 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import banner from '../assets/Banner.png'
+import banner2 from '../assets/Banner2.png'
+import banner3 from '../assets/Banner3.png'
 import ProductCard from '../components/productCard' 
 import { server } from '../App'
 import SkeletonLoader from '../components/skeletonLoader'
+import { Slide } from 'react-slideshow-image';
+import 'react-slideshow-image/dist/styles.css'
+import Footer from '../components/footer'
 
 export const photoUrl = "http://localhost:3000"
+
+const divStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundSize: 'cover',
+  height: '400px'
+}
+const slideImages = [banner2,banner,banner3];
+
 
 const home = () => {
 
@@ -23,8 +38,16 @@ const home = () => {
 
   return (
     <>
-    <section  className=' pt-80 h-16 w-full bg-no-repeat bg-cover' style={{backgroundImage:`url(${banner})`}}>
-    </section>
+    <div className="slide-container">
+        <Slide duration={1500} transitionDuration={500} autoplay>
+         {slideImages.map((slideImage, index)=> (
+            <div key={index}>
+              <div style={{ ...divStyle, 'backgroundImage': `url(${slideImage})` }}>
+              </div>
+            </div>
+          ))} 
+        </Slide>
+      </div>
     <h1 className='m-9 text-4xl font-serif'>Latest Products</h1>
     <main className='m-5 flex gap-2 flex-wrap '>
       {show?
@@ -40,6 +63,7 @@ const home = () => {
         </main>
       }
 </main>
+<Footer />
     </>
   )
 }

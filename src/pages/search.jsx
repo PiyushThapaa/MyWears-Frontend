@@ -77,25 +77,24 @@ const search = () => {
         </select>
       </aside>
       <section className=' mt-8 mr-4'>
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-col gap-6 items-center'>
+        <div className='flex items-center gap-24 justify-around'>
           <p className=' text-4xl'>Products</p>
           <FaFilter size={40} className='block md:hidden p-2 bg-black text-white cursor-pointer rounded' onClick={()=>setDisplayFilter(prev=>!prev)}/>
         </div>
-        <br />
         <input type="text" placeholder='Search...' className='border border-black w-3/4 h-10 text-xl pl-2 rounded ' onChange={(e) => {
           setSearch(e.target.value)
         }
         } />
-        <br />
-        <br />
-        <div className='flex flex-wrap'>
+        </div>
+        <div className='flex justify-center flex-wrap'>
           {show?
             products.map((product) => {
               let imgLoc = String(product.photo).split('\\').pop()
               return (
                 <ProductCard image={`${photoUrl}/uploads/${imgLoc}`} itemName={product.name} price={product.price} key={product._id} productId={product._id} />
               )
-            }): <div className='flex flex-wrap'>
+            }): <div className='flex justify-center flex-wrap'>
               <SkeletonLoader/>
               <SkeletonLoader/>
               <SkeletonLoader/>
@@ -104,13 +103,13 @@ const search = () => {
               <SkeletonLoader/>
             </div>
           }
-        </div>
-        <div className='flex flex-row'>
+        <div className='flex w-3/4 flex-wrap'>
           {
             pageArray.map((page) => {
               return <PageIcon page={page} key={page} onClick={() => setPage(page)} />
             })
           }
+        </div>
         </div>
       </section>
     </div>

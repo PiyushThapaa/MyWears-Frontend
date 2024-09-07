@@ -2,7 +2,7 @@ import React from 'react'
 
 const SkeletonLoader = () => {
   return (
-    <div className="w-60 rounded overflow-hidden shadow-lg m-4">
+    <div className="w-64 rounded overflow-hidden shadow-lg m-4">
   <div className="w-full bg-gray-400 h-40 animate-pulse"></div>
   <div className="px-6 py-4 bg-gray-500 flex justify-between items-center animate-pulse">
     <div>

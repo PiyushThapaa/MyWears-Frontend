@@ -66,6 +66,9 @@ const Main = () => {
     <RouteContext.Provider value={{setUserRoute,setAdminRoute}}>
     <Router>
     <Header/>
+    <br />
+    <br />
+    <br />
     <Suspense fallback={<Loader />} >
       <Routes>
         <Route path="/" element={<Home />} />

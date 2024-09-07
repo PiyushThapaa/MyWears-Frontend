@@ -78,7 +78,7 @@ const Header = () => {
   const [navbar, setNavbar] = useState(false)
 
   return (
-    <nav className="w-full text-gray-400 bg-gray-900 shadow">
+    <nav className="w-full text-gray-400 bg-gray-900 shadow fixed z-40 mb-20">
       <Toaster />
       <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
         <div>
@@ -132,17 +132,17 @@ const Header = () => {
           >
             <ul className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
               <li>
-              <Link to={"/"} className="mr-3 hover:text-white">Home</Link>
+              <Link to={"/"} onClick={()=>setNavbar(false)} className="mr-3 hover:text-white">Home</Link>
               </li>
               <li>
-              <Link to={"/search"} className="mr-3 hover:text-white">Search</Link>
+              <Link to={"/search"} onClick={()=>setNavbar(false)} className="mr-3 hover:text-white">Search</Link>
               </li>
               <li>
-              <Link to={"/cart"} className="mr-3 hover:text-white">Cart</Link>
+              <Link to={"/cart"} onClick={()=>setNavbar(false)} className="mr-3 hover:text-white">Cart</Link>
               </li>
-              <li>{user && <Link to={"/orders"} className="mr-3 hover:text-white">Orders</Link>}</li>
-              <li>{user && <Link to={"/profile"} className="mr-3 hover:text-white">Profile</Link>}</li>
-              <li>{admin && <Link to={"/admin-dashboard"} className="mr-3 hover:text-white">Dashboard</Link>}</li>
+              <li>{user && <Link to={"/orders"} onClick={()=>setNavbar(false)} className="mr-3 hover:text-white">Orders</Link>}</li>
+              <li>{user && <Link to={"/profile"} onClick={()=>setNavbar(false)} className="mr-3 hover:text-white">Profile</Link>}</li>
+              <li>{admin && <Link to={"/admin-dashboard"} onClick={()=>setNavbar(false)} className="mr-3 hover:text-white">Dashboard</Link>}</li>
             </ul>
           </div>
         </div>

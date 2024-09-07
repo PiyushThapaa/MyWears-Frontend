@@ -51,7 +51,7 @@ const ProductCard = ({ image, itemName, price, productId }) => {
     }).catch(err => console.log(err));
   }
   return (
-    <div className="w-60 rounded overflow-hidden shadow-lg m-4">
+    <div className="w-64 rounded overflow-hidden shadow-lg m-4">
       <Link to={`/productDetails/${productId}`} className=' cursor-pointer'>
       <div className='w-full bg-gray-600 h-40' style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}>
       </div></Link>
