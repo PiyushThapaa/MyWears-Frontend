@@ -25,7 +25,10 @@ const OrderDetails = () => {
             .then(res => {
               setOrderInfo(res.data.order)
             })
-            .catch(err => console.log(err.response.data.message))
+            .catch(err => {
+              console.log(err)
+              Navigate('*')
+            })
 
         axios.get(`${server}/users/me`,{
             withCredentials:true
@@ -83,7 +86,7 @@ const OrderDetails = () => {
 
       <div className="mb-4">
         <h4 className="text-gray-600">Your Address:</h4>
-        <p className="text-gray-800">{streetAddress}, {state}, {city} - 110044, India </p>
+        <p className="text-gray-800">{streetAddress}, {state}, {city} - {zipcode}, India </p>
       </div>
     </div>
   );

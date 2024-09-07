@@ -57,7 +57,7 @@ const ProductCard = ({ image, itemName, price, productId }) => {
       </div></Link>
       <div className="px-6 py-4 bg-gray-600 flex justify-between items-center">
         <div>
-          <div className="font-bold text-xl mb-2 text-white">{itemName}</div>
+          <div className="font-bold text-lg mb-2 text-white">{itemName}</div>
           <p className="text-white text-base">₹{price}</p>
         </div>
         {localStorage.getItem("cart") !== null ? (

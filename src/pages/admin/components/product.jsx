@@ -72,6 +72,9 @@ const AddProducts = () => {
       alert("Price can't be negetive")
       return;
     }
+    if (formData.name.length > 18) {
+      alert("Product name should be upto 18 characters only")
+    }
 
     axios.postForm(`${server}/products/new`, formData, {
       withCredentials: true
@@ -196,7 +199,7 @@ const AllProducts = () => {
 
 
   return (
-    <div className=' rounded flex justify-center shadow-lg w-full'>
+    <div className=' rounded flex justify-center w-full'>
       <div className="container flex flex-wrap mx-auto p-4">
       {allProducts.map((product,index)=>{
         let imgLoc = String(product.photo).split('\\').pop()

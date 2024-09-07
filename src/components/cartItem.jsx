@@ -88,7 +88,7 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
       <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-        <img className="h-20 w-20 dark:hidden" src={image} alt="product image" onClick={() => Navigate(`/productDetails/${cartId}`)} />
+        <img className="h-20 w-20 dark:hidden cursor-pointer" src={image} alt="product image" onClick={() => Navigate(`/productDetails/${cartId}`)} />
         <div className="flex items-center justify-between md:order-3 md:justify-end">
           <div className="flex items-center">
             <button type="button" id="decrement-button" className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700" onClick={decreaseCount}>
@@ -132,7 +132,7 @@ const CartItem = ({ image, productName, price, cartId, index }) => {
         </div>
 
         <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-          <p onClick={()=>Navigate(`/productDetails/${cartId}`)} className="text-base font-medium text-gray-900 hover:underline dark:text-white">{productName}</p>
+          <p onClick={()=>Navigate(`/productDetails/${cartId}`)} className="text-base font-medium text-gray-900 hover:underline dark:text-white cursor-pointer">{productName}</p>
           <div className="flex items-center gap-4">
             <button type="button" className="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500" onClick={removeCartItem}>
               Remove

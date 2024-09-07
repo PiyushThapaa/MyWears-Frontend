@@ -4,8 +4,11 @@ import { server } from '../../../App'
 import { photoUrl } from '../../home'
 import toast from 'react-hot-toast'
 import { ClipLoader } from 'react-spinners'
+import { useNavigate } from 'react-router-dom'
 
 const orderDetails = () => {
+
+  const Navigate = useNavigate()
   const orderId = window.location.pathname.split('/').pop()
 
   const [userid, setUserid] = useState('')
@@ -26,7 +29,10 @@ const orderDetails = () => {
         setUserid(res.data.order.user)
         setUpdateShippingInfo(!updateShippingInfo)
       })
-      .catch(err => console.log(err.response.data.message))
+      .catch(err => {
+        console.log(err)
+        Navigate('*')
+      })
   }, [updateStatus])
 
   useEffect(() => {
