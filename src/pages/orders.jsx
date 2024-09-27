@@ -59,37 +59,39 @@ const Orders = () => {
 
     <div className='flex flex-col items-center'>
       <h1 className='text-4xl font-thin m-7'>My Orders</h1>
+      {data.length==0? <p className='text-red-700 text-3xl'>No Orders found</p> :
       <table {...getTableProps()} className=' border-collapse table-fixed w-full md:w-auto'>
-        <thead>
-          {headerGroups.map(hg => (
-            <tr {...hg.getHeaderGroupProps()}>
-              {hg.headers.map(header => (
-                <th {...header.getHeaderProps(header.getSortByToggleProps())} className='p-3'>
-                  {header.render("Headers")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {
-            rows.map(row => {
-              prepareRow(row)
-              return <tr {...row.getRowProps()} >
+      <thead>
+        {headerGroups.map(hg => (
+          <tr {...hg.getHeaderGroupProps()}>
+            {hg.headers.map(header => (
+              <th {...header.getHeaderProps(header.getSortByToggleProps())} className='p-3'>
+                {header.render("Headers")}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {
+          rows.map(row => {
+            prepareRow(row)
+            return <tr {...row.getRowProps()} >
 
-                {
-                  row.cells.map(cell => (
-                    <td {...cell.getCellProps()} className={`p-5 border-b-2 self-center text-center ${
-                      cell.column.id === 'id' ? 'overflow-hidden text-ellipsis whitespace-nowrap w-28' : '' }`}>
-                      {cell.render("Cell")}
-                    </td>
-                  ))
-                }
-              </tr>
-            })
-          }
-        </tbody>
-      </table>
+              {
+                row.cells.map(cell => (
+                  <td {...cell.getCellProps()} className={`p-5 border-b-2 self-center text-center ${
+                    cell.column.id === 'id' ? 'overflow-hidden text-ellipsis whitespace-nowrap w-28' : '' }`}>
+                    {cell.render("Cell")}
+                  </td>
+                ))
+              }
+            </tr>
+          })
+        }
+      </tbody>
+    </table>
+      }
     </div>
   )
 }

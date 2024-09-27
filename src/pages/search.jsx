@@ -89,12 +89,12 @@ const search = () => {
         </div>
         <div className='flex justify-center flex-wrap'>
           {show?
-            products.map((product) => {
+            (products.length!=0?products.map((product) => {
               let imgLoc = String(product.photo).split('\\').pop()
               return (
                 <ProductCard image={`${photoUrl}/uploads/${imgLoc}`} itemName={product.name} price={product.price} key={product._id} productId={product._id} />
               )
-            }): <div className='flex justify-center flex-wrap'>
+            }):<p className='text-red-600 m-12 text-3xl'>No Product Found</p>): <div className='flex justify-center flex-wrap'>
               <SkeletonLoader/>
               <SkeletonLoader/>
               <SkeletonLoader/>
