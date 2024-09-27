@@ -9,7 +9,8 @@ import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 import Footer from '../components/footer'
 
-export const photoUrl = "http://localhost:3000"
+export const photoUrl = "https://mywearsserver-vkp18z1e.b4a.run"
+// export const photoUrl = "http://localhost:3000"
 
 const divStyle = {
   display: 'flex',

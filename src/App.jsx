@@ -17,7 +17,8 @@ const OrderDetails = lazy(() => import('./pages/admin/components/orderDetails'))
 const UserOrderDetails = lazy(() => import('./pages/orderDetails'));
 const PageNotFound = lazy(() => import('./pages/pageNotFound'));
 
-export const server = "http://localhost:3000/api/v1"
+export const server = "https://mywearsserver-vkp18z1e.b4a.run/api/v1"
+// export const server = "http://localhost:3000/api/v1"
 
 export const Context = createContext(null)
 export const RouteContext = createContext(null)
